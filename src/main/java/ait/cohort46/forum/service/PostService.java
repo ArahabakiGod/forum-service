@@ -1,9 +1,6 @@
 package ait.cohort46.forum.service;
 
-import ait.cohort46.forum.dto.AddPostDto;
-import ait.cohort46.forum.dto.PostDto;
-import ait.cohort46.forum.dto.UpdatePostDto;
-import org.springframework.stereotype.Service;
+import ait.cohort46.forum.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +14,7 @@ public interface PostService {
 
     void addLike(String id);
 
-    PostDto addComment(String id, String author, String comment);
+    PostDto addComment(String id, String author, NewCommentDto comment);
 
     PostDto findPostById(String id);
 

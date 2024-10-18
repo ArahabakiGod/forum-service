@@ -1,6 +1,7 @@
 package ait.cohort46.forum.controller;
 
 import ait.cohort46.forum.dto.AddPostDto;
+import ait.cohort46.forum.dto.NewCommentDto;
 import ait.cohort46.forum.dto.PostDto;
 import ait.cohort46.forum.dto.UpdatePostDto;
 import ait.cohort46.forum.service.PostService;
@@ -9,12 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/forum")
+@RestController
 public class PostController {
     private final PostService postService;
 
@@ -42,7 +46,7 @@ public class PostController {
     }
 
     @PatchMapping("/post/{id}/comment/{author}")
-    public PostDto addComment(@PathVariable String id, @PathVariable String author, @RequestBody String comment) {
+    public PostDto addComment(@PathVariable String id, @PathVariable String author, @RequestBody NewCommentDto comment) {
         return postService.addComment(id, author, comment);
     }
 
@@ -52,7 +56,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/author/{author}")
-    public List<PostDto> findPostsByAuthor(String author) {
+    public List<PostDto> findPostsByAuthor(@PathVariable String author) {
         return postService.findPostsByAuthor(author);
     }
 
@@ -62,7 +66,10 @@ public class PostController {
     }
 
     @GetMapping("/posts/period")
-    public List<PostDto> findPostsByPeriod(@RequestParam LocalDateTime dateFrom, @RequestParam LocalDateTime dateTo) {
-        return postService.findPostsByPeriod(dateFrom, dateTo);
+    public List<PostDto> findPostsByPeriod(@RequestParam String dateFrom, @RequestParam String dateTo) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime from = LocalDate.parse(dateFrom, formatter).atStartOfDay();
+        LocalDateTime to = LocalDate.parse(dateTo, formatter).atStartOfDay();
+        return postService.findPostsByPeriod(from, to);
     }
 }

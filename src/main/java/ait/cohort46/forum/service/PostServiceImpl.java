@@ -1,10 +1,9 @@
 package ait.cohort46.forum.service;
 
 import ait.cohort46.forum.dao.ForumRepository;
-import ait.cohort46.forum.dto.AddPostDto;
-import ait.cohort46.forum.dto.PostDto;
-import ait.cohort46.forum.dto.UpdatePostDto;
+import ait.cohort46.forum.dto.*;
 import ait.cohort46.forum.dto.exceptions.PostNotFoundException;
+import ait.cohort46.forum.model.Comment;
 import ait.cohort46.forum.model.Post;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -23,29 +23,47 @@ public class PostServiceImpl implements PostService {
     public PostDto addPost(String author, AddPostDto addPostDto) {
         Post post = modelMapper.map(addPostDto, Post.class);
         post.setAuthor(author);
-        post = forumRepository.save(post);
-        PostDto postDto = modelMapper.map(post, PostDto.class);
-        return postDto;
+        forumRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public PostDto deletePost(String id) {
-        return null;
+        Post post = forumRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        forumRepository.deleteById(id);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public PostDto updatePost(String id, UpdatePostDto updatePostDto) {
-        return null;
+        Post post = forumRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        if (updatePostDto.getTitle() != null) {
+            post.setTitle(updatePostDto.getTitle());
+        }
+        if (updatePostDto.getContent() != null) {
+            post.setContent(updatePostDto.getContent());
+        }
+        if (updatePostDto.getTags() != null) {
+            post.getTags().addAll(updatePostDto.getTags());
+        }
+        forumRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public void addLike(String id) {
-
+        Post post = forumRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        post.addLike();
+        forumRepository.save(post);
     }
 
     @Override
-    public PostDto addComment(String id, String author, String comment) {
-        return null;
+    public PostDto addComment(String id, String author, NewCommentDto comment) {
+        Post post = forumRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        Comment newComment = new Comment(author, comment.getMessage());
+        post.addComment(newComment);
+        forumRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
     }
 
     @Override
@@ -56,16 +74,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> findPostsByAuthor(String author) {
-        return List.of();
+        return forumRepository.findByAuthorIgnoreCase(author)
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
     }
 
     @Override
     public List<PostDto> findPostsByTags(List<String> tags) {
-        return List.of();
+        return forumRepository.findByTagsInIgnoreCase(tags)
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
     }
 
     @Override
     public List<PostDto> findPostsByPeriod(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return List.of();
+        return forumRepository.findByDate(dateFrom, dateTo)
+                .map(post -> modelMapper.map(post, PostDto.class))
+                .toList();
     }
 }
