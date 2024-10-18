@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ForumServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <envs>
+      <env name="MONGODB_URI" value="mongodb+srv://admin:admin@cluster0.vsxm6.mongodb.net/cohort46?retryWrites=true&amp;w=majority&amp;appName=Cluster0" />
+    </envs>
+    <module name="forum-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ait.cohort46.ForumServiceApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
