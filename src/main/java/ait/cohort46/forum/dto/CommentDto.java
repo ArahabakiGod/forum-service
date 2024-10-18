@@ -5,18 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostDto {
-    private String id;
-    private String title;
-    private String content;
-    private String author;
+public class CommentDto {
+    private String user;
+    private String message;
     private LocalDateTime dateCreated;
-    private List<String> tags;
     private Long likes;
-    private List<CommentDto> comments;
 }

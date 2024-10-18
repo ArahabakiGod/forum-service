@@ -26,7 +26,7 @@ public class Post {
     private List<String> tags;
     @Setter
     private Long likes;
-    private List<String> comments;
+    private List<Comment> comments;
 
     public Post(String id, String title, String content, String author, List<String> tags) {
         this.id = id;
