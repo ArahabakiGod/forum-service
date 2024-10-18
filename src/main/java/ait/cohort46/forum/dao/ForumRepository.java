@@ -1,8 +1,8 @@
 package ait.cohort46.forum.dao;
 
 import ait.cohort46.forum.model.Post;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface ForumRepository extends CrudRepository<Post, String> {
+public interface ForumRepository extends MongoRepository<Post, String> {
 
 }

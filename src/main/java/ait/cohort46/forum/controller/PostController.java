@@ -5,6 +5,7 @@ import ait.cohort46.forum.dto.PostDto;
 import ait.cohort46.forum.dto.UpdatePostDto;
 import ait.cohort46.forum.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,50 +14,54 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/forum")
 public class PostController {
     private final PostService postService;
 
-    @PostMapping("/forum/post/{author}")
+    @PostMapping("/post/{author}")
     public PostDto addPost(@PathVariable String author, @RequestBody AddPostDto addPostDto) {
-        return postService.addPost(author, addPostDto);
+        PostDto postDto = postService.addPost(author, addPostDto);
+        System.out.println("AddPost");
+        return postDto;
     }
 
-    @DeleteMapping("/forum/post/{id}")
+    @DeleteMapping("/post/{id}")
     public PostDto deletePost(@PathVariable String id) {
         return postService.deletePost(id);
     }
 
-    @PatchMapping("/forum/post/{id}")
+    @PatchMapping("/post/{id}")
     public PostDto updatePost(@PathVariable String id, @RequestBody UpdatePostDto updatePostDto) {
         return postService.updatePost(id, updatePostDto);
     }
 
-    @PatchMapping("/forum/post/{id}/like")
+    @PatchMapping("/post/{id}/like")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addLike(@PathVariable String id) {
         postService.addLike(id);
     }
 
-    @PatchMapping("/forum/post/{id}/comment/{author}")
+    @PatchMapping("/post/{id}/comment/{author}")
     public PostDto addComment(@PathVariable String id, @PathVariable String author, @RequestBody String comment) {
         return postService.addComment(id, author, comment);
     }
 
-    @GetMapping("/forum/post/{id}")
+    @GetMapping("/post/{id}")
     public PostDto findPostById(@PathVariable String id) {
         return postService.findPostById(id);
     }
 
-    @GetMapping("/forum/posts/author/{author}")
+    @GetMapping("/posts/author/{author}")
     public List<PostDto> findPostsByAuthor(String author) {
         return postService.findPostsByAuthor(author);
     }
 
-    @GetMapping("/forum/posts/tags")
+    @GetMapping("/posts/tags")
     public List<PostDto> findPostsByTags(@RequestParam List<String> values) {
         return postService.findPostsByTags(values);
     }
 
-    @GetMapping("/forum/posts/period")
+    @GetMapping("/posts/period")
     public List<PostDto> findPostsByPeriod(@RequestParam LocalDateTime dateFrom, @RequestParam LocalDateTime dateTo) {
         return postService.findPostsByPeriod(dateFrom, dateTo);
     }

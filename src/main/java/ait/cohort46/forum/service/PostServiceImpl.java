@@ -7,7 +7,6 @@ import ait.cohort46.forum.dto.UpdatePostDto;
 import ait.cohort46.forum.dto.exceptions.PostNotFoundException;
 import ait.cohort46.forum.model.Post;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class PostServiceImpl implements PostService {
     public PostDto addPost(String author, AddPostDto addPostDto) {
         Post post = modelMapper.map(addPostDto, Post.class);
         post.setAuthor(author);
-        forumRepository.save(post);
+        post = forumRepository.save(post);
         PostDto postDto = modelMapper.map(post, PostDto.class);
         return postDto;
     }

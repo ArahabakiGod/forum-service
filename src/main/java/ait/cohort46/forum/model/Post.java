@@ -14,7 +14,6 @@ import java.util.List;
 @Document(collection = "posts")
 @NoArgsConstructor
 public class Post {
-    @Id
     private String id;
     @Setter
     private String title;
@@ -22,11 +21,11 @@ public class Post {
     private String content;
     @Setter
     private String author;
-    private LocalDateTime dateCreated;
+    private LocalDateTime dateCreated = LocalDateTime.now();
     private List<String> tags;
     @Setter
-    private Long likes;
-    private List<Comment> comments;
+    private long likes;
+    private List<Comment> comments = new ArrayList<>();
 
     public Post(String id, String title, String content, String author, List<String> tags) {
         this.id = id;
@@ -48,5 +47,25 @@ public class Post {
         comments = new ArrayList<>();
         tags = new ArrayList<>();
         dateCreated = LocalDateTime.now();
+    }
+
+    public void addLike() {
+        likes++;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+    }
+
+    public void addTag(String tag) {
+        tags.add(tag);
+    }
+
+    public void removeTag(String tag) {
+        tags.remove(tag);
     }
 }
