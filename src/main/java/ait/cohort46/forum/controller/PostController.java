@@ -68,8 +68,8 @@ public class PostController {
     @GetMapping("/posts/period")
     public List<PostDto> findPostsByPeriod(@RequestParam String dateFrom, @RequestParam String dateTo) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime from = LocalDate.parse(dateFrom, formatter).atStartOfDay();
-        LocalDateTime to = LocalDate.parse(dateTo, formatter).atStartOfDay();
+        LocalDate from = LocalDate.parse(dateFrom, formatter);
+        LocalDate to = LocalDate.parse(dateTo, formatter);
         return postService.findPostsByPeriod(from, to);
     }
 }

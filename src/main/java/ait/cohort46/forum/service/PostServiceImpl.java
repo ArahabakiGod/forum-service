@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -87,8 +88,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> findPostsByPeriod(LocalDateTime dateFrom, LocalDateTime dateTo) {
-        return forumRepository.findByDate(dateFrom, dateTo)
+    public List<PostDto> findPostsByPeriod(LocalDate dateFrom, LocalDate dateTo) {
+        return forumRepository.findByDateCreatedBetween(dateFrom, dateTo)
                 .map(post -> modelMapper.map(post, PostDto.class))
                 .toList();
     }

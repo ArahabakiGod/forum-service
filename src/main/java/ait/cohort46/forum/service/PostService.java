@@ -2,6 +2,7 @@ package ait.cohort46.forum.service;
 
 import ait.cohort46.forum.dto.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface PostService {
 
     List<PostDto> findPostsByTags(List<String> tags);
 
-    List<PostDto> findPostsByPeriod(LocalDateTime dateFrom, LocalDateTime dateTo);
+    List<PostDto> findPostsByPeriod(LocalDate dateFrom, LocalDate dateTo);
 
 
 }
