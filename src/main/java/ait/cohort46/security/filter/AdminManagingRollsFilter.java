@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,19 +16,18 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Order(20)
 public class AdminManagingRollsFilter implements Filter {
-    private final AccountingRepository accountingRepository;
+    private final AccountingRepository repository;
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
         if (checkEndpoint(request.getMethod(), request.getServletPath())) {
-            User user = accountingRepository.findById(request.getUserPrincipal().getName()).get();
+            User user = repository.findById(request.getUserPrincipal().getName()).get();
             if (!user.getRoles().contains(Role.ADMINISTRATOR)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
         }
-        //TODO
         chain.doFilter(request, response);
     }
 

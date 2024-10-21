@@ -1,7 +1,6 @@
 package ait.cohort46.security.filter;
 
 import ait.cohort46.accounting.dao.AccountingRepository;
-import ait.cohort46.accounting.dto.exceptions.UserNotFoundException;
 import ait.cohort46.accounting.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
-@Order(20)
+@Order(10)
 public class AuthenticationFilter implements Filter {
     private final AccountingRepository repository;
 
