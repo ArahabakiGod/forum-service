@@ -9,8 +9,11 @@ import ait.cohort46.accounting.dto.exceptions.UserAlreadyExistsException;
 import ait.cohort46.accounting.dto.exceptions.UserNotFoundException;
 import ait.cohort46.accounting.model.User;
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,8 @@ public class AccountingServiceImpl implements AccountingService {
             throw new UserAlreadyExistsException();
         }
         User user = modelMapper.map(registerDto, User.class);
+        String password = BCrypt.hashpw(registerDto.getPassword(), BCrypt.gensalt());
+        user.setPassword(password);
         user.addRole("USER");
         accountingRepository.save(user);
         return modelMapper.map(user, UserDto.class);
@@ -72,12 +77,10 @@ public class AccountingServiceImpl implements AccountingService {
     }
 
     @Override
-    public UserDto loginIntoAccount() {
-        return null;
-    }
-
-    @Override
-    public void changePassword(String exPassword) {
-
+    public void changePassword(String userName, String newPassword) {
+        User user = accountingRepository.findById(userName).orElseThrow(UserNotFoundException::new);
+        String password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        user.setPassword(password);
+        accountingRepository.save(user);
     }
 }

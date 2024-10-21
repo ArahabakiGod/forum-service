@@ -5,6 +5,8 @@ import ait.cohort46.accounting.dto.UpdateDto;
 import ait.cohort46.accounting.dto.UserDto;
 import ait.cohort46.accounting.dto.UserRolesDto;
 
+import java.security.Principal;
+
 public interface AccountingService {
     UserDto createAccount(RegisterDto registerDto);
 
@@ -18,8 +20,5 @@ public interface AccountingService {
 
     UserDto getUser(String userName);
 
-    //TODO
-    UserDto loginIntoAccount();
-
-    void changePassword(String exPassword);
+    void changePassword(String userName, String newPassword);
 }

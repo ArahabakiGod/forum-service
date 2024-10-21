@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RequestMapping("/account")
 @RestController
 @Controller
@@ -46,13 +48,13 @@ public class AccountingController {
         return accountingService.getUser(userName);
     }
 
-    @PostMapping("/user/{user}")
-    public UserDto loginIntoAccount() {
-        return accountingService.loginIntoAccount();
+    @PostMapping("/login")
+    public UserDto loginIntoAccount(Principal principal) {
+        return accountingService.getUser(principal.getName());
     }
 
     @PatchMapping("/user/password")
-    public void changePassword(@RequestHeader String exPassword) {
-        accountingService.changePassword(exPassword);
+    public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword) {
+        accountingService.changePassword(principal.getName(), newPassword);
     }
 }
