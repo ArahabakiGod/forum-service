@@ -53,8 +53,9 @@ public class AccountingController {
         return accountingService.getUser(principal.getName());
     }
 
-    @PatchMapping("/user/password")
+    @PatchMapping("/password")
     public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword) {
+        System.out.println(principal.getName());
         accountingService.changePassword(principal.getName(), newPassword);
     }
 }
