@@ -7,17 +7,19 @@ import ait.cohort46.accounting.dto.UserDto;
 import ait.cohort46.accounting.dto.UserRolesDto;
 import ait.cohort46.accounting.dto.exceptions.UserAlreadyExistsException;
 import ait.cohort46.accounting.dto.exceptions.UserNotFoundException;
+import ait.cohort46.accounting.model.Role;
 import ait.cohort46.accounting.model.User;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
-public class AccountingServiceImpl implements AccountingService {
+public class AccountingServiceImpl implements AccountingService, CommandLineRunner {
     private final AccountingRepository accountingRepository;
     private final ModelMapper modelMapper;
 
@@ -29,7 +31,6 @@ public class AccountingServiceImpl implements AccountingService {
         User user = modelMapper.map(registerDto, User.class);
         String password = BCrypt.hashpw(registerDto.getPassword(), BCrypt.gensalt());
         user.setPassword(password);
-        user.addRole("USER");
         accountingRepository.save(user);
         return modelMapper.map(user, UserDto.class);
     }
@@ -82,5 +83,16 @@ public class AccountingServiceImpl implements AccountingService {
         String password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         user.setPassword(password);
         accountingRepository.save(user);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        if (!accountingRepository.existsById("admin")) {
+            String password = BCrypt.hashpw("admin", BCrypt.gensalt());
+            User admin = new User("admin", password, "", "");
+            admin.addRole(Role.ADMINISTRATOR.name());
+            admin.addRole(Role.MODERATOR.name());
+            accountingRepository.save(admin);
+        }
     }
 }

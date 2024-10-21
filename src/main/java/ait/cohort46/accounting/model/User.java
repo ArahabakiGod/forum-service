@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 @Document(collection = "users")
 public class User {
     @Id
@@ -20,11 +19,17 @@ public class User {
     private String firstName;
     @Setter
     private String lastName;
-    private List<String> roles = new ArrayList<>();
+    private List<Role> roles;
     @Setter
     private String password;
 
+    public User() {
+        roles = new ArrayList<>();
+        roles.add(Role.USER);
+    }
+
     public User(String login, String password, String firstName, String lastName) {
+        this();
         this.login = login;
         this.password = password;
         this.firstName = firstName;
@@ -32,10 +37,10 @@ public class User {
     }
 
     public void addRole(String role) {
-        roles.add(role);
+        roles.add(Role.valueOf(role.toUpperCase()));
     }
 
     public void removeRole(String role) {
-        roles.remove(role);
+        roles.remove(Role.valueOf(role.toUpperCase()));
     }
 }
